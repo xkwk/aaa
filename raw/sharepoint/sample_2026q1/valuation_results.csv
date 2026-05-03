@@ -1,0 +1,6 @@
+valuation_period,run_id,product,portfolio,cohort,measure,amount,currency
+2025Q4,sample_2026q1,Whole Life,Retail,2020,BEL,1000,AUD
+2026Q1,sample_2026q1,Whole Life,Retail,2020,BEL,1130,AUD
+2025Q4,sample_2026q1,Term Life,Retail,2021,BEL,800,AUD
+2026Q1,sample_2026q1,Term Life,Retail,2021,BEL,780,AUD
+
