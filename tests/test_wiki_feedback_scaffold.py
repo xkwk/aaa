@@ -45,7 +45,20 @@ class WikiFeedbackScaffoldTests(unittest.TestCase):
             self.assertTrue(Path(result["path"]).exists())
             self.assertTrue(Path(result["lessons"]).exists())
 
+    def test_wiki_docs_define_llm_wiki_maintenance(self):
+        root = Path(__file__).resolve().parents[1]
+        schema = (root / "wiki" / "schema.md").read_text(encoding="utf-8")
+        index = (root / "wiki" / "index.md").read_text(encoding="utf-8")
+        log = (root / "wiki" / "log.md").read_text(encoding="utf-8")
+        skill = (root / ".github" / "skills" / "wiki-curation" / "SKILL.md").read_text(encoding="utf-8")
+
+        self.assertIn("Ingest Operation", schema)
+        self.assertIn("Query Operation", schema)
+        self.assertIn("Lint Operation", schema)
+        self.assertIn("[YYYY-MM-DD] ingest", log)
+        self.assertIn("## Sources", index)
+        self.assertIn("durable synthesis", skill)
+
 
 if __name__ == "__main__":
     unittest.main()
-
