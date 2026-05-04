@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Actuarial AI Agent Workbench Pattern</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #182026;
+      --muted: #5d6872;
+      --line: #d8dee4;
+      --paper: #f7f8fa;
+      --white: #ffffff;
+      --blue: #2563eb;
+      --green: #12805c;
+      --amber: #b26a00;
+      --rose: #b42358;
+      --violet: #6d4aff;
+      --shadow: 0 18px 48px rgba(24, 32, 38, 0.11);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    .page {
+      min-height: 100vh;
+    }
+
+    .hero {
+      background: #15232f;
+      color: var(--white);
+      padding: 42px clamp(20px, 4vw, 64px) 34px;
+      border-bottom: 6px solid #2fb47c;
+    }
+
+    .hero-inner,
+    .section-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #91d8b5;
+      font-size: 13px;
+      font-weight: 750;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 920px;
+      margin: 0;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1.03;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 820px;
+      margin: 18px 0 0;
+      color: #d9e4eb;
+      font-size: clamp(17px, 2vw, 22px);
+    }
+
+    .section {
+      padding: 34px clamp(20px, 4vw, 64px);
+    }
+
+    .section + .section {
+      padding-top: 18px;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .subtle {
+      max-width: 820px;
+      margin: -4px 0 22px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap: 14px;
+      align-items: stretch;
+      margin-top: 22px;
+    }
+
+    .node {
+      position: relative;
+      min-height: 168px;
+      padding: 18px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 26px rgba(24, 32, 38, 0.07);
+    }
+
+    .node::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -15px;
+      width: 15px;
+      height: 2px;
+      background: var(--line);
+    }
+
+    .node:last-child::after {
+      display: none;
+    }
+
+    .node-icon {
+      display: inline-grid;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 16px;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--white);
+      font-weight: 850;
+    }
+
+    .blue { background: var(--blue); }
+    .green { background: var(--green); }
+    .amber { background: var(--amber); }
+    .rose { background: var(--rose); }
+    .violet { background: var(--violet); }
+
+    .node h3,
+    .lane h3,
+    .step h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .node p,
+    .lane p,
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .responsibility-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .lane {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-top: 6px solid var(--blue);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .lane.agent {
+      border-top-color: var(--green);
+    }
+
+    .lane ul,
+    .compact-list {
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .lane li,
+    .compact-list li {
+      position: relative;
+      margin: 10px 0 0;
+      padding-left: 20px;
+      color: #35414b;
+      font-size: 15px;
+    }
+
+    .lane li::before,
+    .compact-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.62em;
+      width: 8px;
+      height: 8px;
+      border-radius: 8px;
+      background: currentColor;
+      opacity: 0.5;
+    }
+
+    .loop {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      counter-reset: loop;
+    }
+
+    .step {
+      min-height: 190px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .step::before {
+      counter-increment: loop;
+      content: counter(loop);
+      display: inline-grid;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 16px;
+      place-items: center;
+      background: #e9f2ff;
+      color: var(--blue);
+      border-radius: 8px;
+      font-weight: 850;
+    }
+
+    .system-map {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .system-panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .system-panel strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-size: 18px;
+    }
+
+    .system-panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfd;
+      color: #2f3a43;
+      font-size: 13px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .example {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 18px;
+      align-items: stretch;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .prompt {
+      padding: 22px;
+      background: #eef7f2;
+      border-right: 1px solid #cfe7d9;
+    }
+
+    .prompt code {
+      display: block;
+      padding: 16px;
+      background: #183528;
+      color: #ecfff5;
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .outcomes {
+      padding: 22px;
+    }
+
+    .outcomes h3,
+    .prompt h3 {
+      margin: 0 0 14px;
+      font-size: 18px;
+    }
+
+    .footer {
+      padding: 28px clamp(20px, 4vw, 64px) 40px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 960px) {
+      .flow,
+      .loop,
+      .system-map,
+      .responsibility-grid,
+      .example {
+        grid-template-columns: 1fr;
+      }
+
+      .node {
+        min-height: auto;
+      }
+
+      .node::after {
+        top: auto;
+        right: auto;
+        left: 32px;
+        bottom: -15px;
+        width: 2px;
+        height: 15px;
+      }
+
+      .prompt {
+        border-right: 0;
+        border-bottom: 1px solid #cfe7d9;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .hero,
+      .section,
+      .footer {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .node,
+      .lane,
+      .step,
+      .system-panel,
+      .example {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <div class="hero-inner">
+        <p class="eyebrow">LLM-native actuarial workbench</p>
+        <h1>How an actuary works with the AI agent</h1>
+        <p class="hero-copy">
+          The actuary gives intent, evidence, and judgment. GitHub Copilot
+          coordinates agents, skills, MCP tools, the wiki, Snowflake, and
+          reusable Python capabilities.
+        </p>
+      </div>
+    </div>
+
+    <div class="section" aria-labelledby="pattern-title">
+      <div class="section-inner">
+        <h2 id="pattern-title">Operating Pattern</h2>
+        <p class="subtle">
+          Copilot is the control surface and reasoning layer. MCP tools are
+          bounded capabilities; they do not decide actuarial intent.
+        </p>
+
+        <div class="flow" role="list" aria-label="Agent workbench flow">
+          <div class="node" role="listitem">
+            <span class="node-icon blue">A</span>
+            <h3>Actuary</h3>
+            <p>Provides the business question, source files, review comments, and professional judgment.</p>
+          </div>
+
+          <div class="node" role="listitem">
+            <span class="node-icon green">C</span>
+            <h3>Copilot Orchestrator</h3>
+            <p>Interprets intent, checks memory, chooses skills, delegates to specialists, and plans the next move.</p>
+          </div>
+
+          <div class="node" role="listitem">
+            <span class="node-icon amber">S</span>
+            <h3>Subagents + Skills</h3>
+            <p>Bring specialist reasoning for profiling, wiki curation, Snowflake, dashboards, review, and tool building.</p>
+          </div>
+
+          <div class="node" role="listitem">
+            <span class="node-icon rose">M</span>
+            <h3>MCP Capabilities</h3>
+            <p>Expose safe Python actions: convert, profile, search/write wiki, inspect Snowflake, run tests, record feedback.</p>
+          </div>
+
+          <div class="node" role="listitem">
+            <span class="node-icon violet">O</span>
+            <h3>Outputs</h3>
+            <p>Updated wiki, proposed Snowflake objects, dashboards, tested Python tools, memos, and unresolved questions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" aria-labelledby="roles-title">
+      <div class="section-inner">
+        <h2 id="roles-title">Human and Agent Responsibilities</h2>
+        <div class="responsibility-grid">
+          <div class="lane">
+            <h3>Actuary owns judgment</h3>
+            <p>The human remains accountable for actuarial meaning, materiality, and sign-off.</p>
+            <ul>
+              <li>Frames the question and business context.</li>
+              <li>Supplies source material and explains constraints.</li>
+              <li>Corrects definitions, assumptions, and interpretation.</li>
+              <li>Approves methods, outputs, and communication.</li>
+            </ul>
+          </div>
+
+          <div class="lane agent">
+            <h3>Agent owns maintenance and execution</h3>
+            <p>The AI handles the tedious work that makes knowledge and tools compound.</p>
+            <ul>
+              <li>Profiles unfamiliar files and converts documents for review.</li>
+              <li>Maintains the markdown wiki, index, log, and open questions.</li>
+              <li>Builds or updates bounded Python tools when repeatability matters.</li>
+              <li>Runs tests, records feedback, and improves skills or agent instructions.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" aria-labelledby="loop-title">
+      <div class="section-inner">
+        <h2 id="loop-title">Typical Work Loop</h2>
+        <p class="subtle">
+          The same loop works for valuation, capital, assumptions, experience
+          studies, reinsurance, ALM, reporting, or a completely new data pack.
+        </p>
+
+        <div class="loop">
+          <div class="step">
+            <h3>State intent</h3>
+            <p>The actuary asks Copilot for an outcome and points to files, folders, or prior wiki pages.</p>
+          </div>
+
+          <div class="step">
+            <h3>Gather evidence</h3>
+            <p>Copilot reads the wiki, profiles data, converts documents, and identifies gaps or contradictions.</p>
+          </div>
+
+          <div class="step">
+            <h3>Extend capability</h3>
+            <p>If existing tools are not enough, Tool Builder drafts a focused Python tool and reviewer checks it.</p>
+          </div>
+
+          <div class="step">
+            <h3>Compound learning</h3>
+            <p>Accepted outputs, decisions, corrections, and questions are filed back into wiki and feedback memory.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" aria-labelledby="system-title">
+      <div class="section-inner">
+        <h2 id="system-title">What the System Provides</h2>
+        <div class="system-map">
+          <div class="system-panel">
+            <strong>Agent memory</strong>
+            <p>Karpathy-style markdown wiki with source pages, concepts, methods, metrics, decisions, questions, lessons, index, and log.</p>
+            <div class="chip-row">
+              <span class="chip">wiki/schema.md</span>
+              <span class="chip">wiki/index.md</span>
+              <span class="chip">wiki/log.md</span>
+            </div>
+          </div>
+
+          <div class="system-panel">
+            <strong>Callable tools</strong>
+            <p>MCP exposes Python capabilities to Copilot without turning Python into the decision engine.</p>
+            <div class="chip-row">
+              <span class="chip">profile</span>
+              <span class="chip">convert</span>
+              <span class="chip">wiki</span>
+              <span class="chip">snowflake</span>
+              <span class="chip">tests</span>
+            </div>
+          </div>
+
+          <div class="system-panel">
+            <strong>Reusable artifacts</strong>
+            <p>Outputs can become durable: Snowflake proposals, Streamlit dashboards, Python tools, memos, test cases, and feedback lessons.</p>
+            <div class="chip-row">
+              <span class="chip">Snowflake</span>
+              <span class="chip">Dashboards</span>
+              <span class="chip">Python tools</span>
+              <span class="chip">Memos</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" aria-labelledby="example-title">
+      <div class="section-inner">
+        <h2 id="example-title">Example Team Conversation</h2>
+        <div class="example">
+          <div class="prompt">
+            <h3>Actuary prompt in VS Code</h3>
+            <code>I uploaded a new capital data pack in raw/2026Q1-capital.
+Understand what is inside, update the wiki, propose useful Snowflake objects,
+and tell me what analysis tools are missing.</code>
+          </div>
+
+          <div class="outcomes">
+            <h3>Expected agent behavior</h3>
+            <ul class="compact-list">
+              <li>Reads wiki schema, index, and recent log entries.</li>
+              <li>Profiles files and converts documents only where useful.</li>
+              <li>Creates source, metric, method, question, and decision pages.</li>
+              <li>Proposes Snowflake objects without assuming a fixed schema.</li>
+              <li>Builds new tools only when the analysis needs repeatable execution.</li>
+              <li>Records corrections as feedback and updates skills or tests.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="section-inner">
+      The design principle: Copilot decides; MCP and Python assist; the wiki and
+      feedback layer make the team smarter over time.
+    </div>
+  </div>
+</body>
+</html>
