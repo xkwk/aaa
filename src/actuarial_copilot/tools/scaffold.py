@@ -1,3 +1,5 @@
+"""Draft tool scaffolding capability for Tool Builder."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -21,6 +23,7 @@ def scaffold_python_tool(name: str, purpose: str, tools_dir: str = "src/actuaria
 
 
 def tool_identifier(value: str) -> str:
+    """Normalize a tool name into a Python module identifier."""
     identifier = re.sub(r"[^a-zA-Z0-9_]+", "_", value).strip("_").lower()
     if not identifier:
         identifier = "new_tool"
@@ -30,6 +33,7 @@ def tool_identifier(value: str) -> str:
 
 
 def tool_template(identifier: str, purpose: str) -> str:
+    """Build the initial source text for a draft capability tool."""
     return f'''"""Draft capability tool: {identifier}.
 
 Purpose: {purpose}
@@ -40,6 +44,7 @@ bounded execution and return structured evidence/results.
 
 
 def run(**kwargs) -> dict:
+    """Return a structured draft response until tool logic is implemented."""
     return {{
         "tool": "{identifier}",
         "status": "draft",
@@ -50,6 +55,7 @@ def run(**kwargs) -> dict:
 
 
 def test_template(identifier: str) -> str:
+    """Build the initial unittest source for a draft capability tool."""
     return f'''from pathlib import Path
 import sys
 import unittest
@@ -70,4 +76,3 @@ class {''.join(part.title() for part in identifier.split('_'))}ToolTests(unittes
 if __name__ == "__main__":
     unittest.main()
 '''
-

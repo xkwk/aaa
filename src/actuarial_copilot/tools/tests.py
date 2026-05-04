@@ -1,3 +1,5 @@
+"""Test execution capability for Reviewer and Tool Builder."""
+
 from __future__ import annotations
 
 import subprocess
@@ -5,6 +7,7 @@ import sys
 
 
 def run_tests(test_path: str = "tests") -> dict:
+    """Run the unittest suite and return structured output."""
     result = subprocess.run(
         [sys.executable, "-m", "unittest", "discover", "-s", test_path],
         text=True,
@@ -17,4 +20,3 @@ def run_tests(test_path: str = "tests") -> dict:
         "stdout": result.stdout,
         "stderr": result.stderr,
     }
-

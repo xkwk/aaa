@@ -1,3 +1,5 @@
+"""Document conversion capability for markdown previews."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -45,6 +47,7 @@ def convert_documents(source: str, output_dir: str = "converted") -> dict:
 
 
 def convert_one(path: Path) -> tuple[str, str]:
+    """Convert a single supported file to markdown-like text."""
     suffix = path.suffix.lower()
     if suffix in {".md", ".txt"}:
         return path.read_text(encoding="utf-8", errors="replace"), "text"
@@ -61,6 +64,7 @@ def convert_one(path: Path) -> tuple[str, str]:
 
 
 def csv_preview(path: Path, max_rows: int = 30) -> str:
+    """Render a small CSV sample as a markdown table."""
     with path.open("r", encoding="utf-8-sig", newline="") as fh:
         rows = []
         for idx, row in enumerate(csv.reader(fh)):
@@ -77,4 +81,3 @@ def csv_preview(path: Path, max_rows: int = 30) -> str:
     for row in normalized[1:]:
         lines.append("| " + " | ".join(row) + " |")
     return "\n".join(lines)
-

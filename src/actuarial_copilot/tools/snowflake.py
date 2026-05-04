@@ -1,3 +1,5 @@
+"""Snowflake posture and object proposal capability."""
+
 from __future__ import annotations
 
 from dataclasses import asdict
@@ -28,4 +30,3 @@ def propose_snowflake_objects(domain_hint: str, source_profile: dict | None = No
         tabular = [file for file in source_profile.get("files", []) if file.get("kind") == "tabular"]
         notes.append(f"Source profile contains {len(tabular)} tabular file(s).")
     return {"domain_hint": domain_hint, "objects": objects, "notes": notes}
-

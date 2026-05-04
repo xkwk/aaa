@@ -1,3 +1,5 @@
+"""Source package profiling capability for agent evidence gathering."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -18,6 +20,7 @@ def profile_source_package(source: str, sample_size: int = 5) -> dict:
 
 
 def profile_file(path: Path, source_root: Path, sample_size: int) -> dict:
+    """Profile one file relative to the submitted source package."""
     relative = path.name if source_root.is_file() else path.relative_to(source_root).as_posix()
     base = {
         "path": str(path),
@@ -35,11 +38,13 @@ def profile_file(path: Path, source_root: Path, sample_size: int) -> dict:
 
 
 def profile_csv(path: Path, sample_size: int) -> dict:
+    """Profile a CSV file using header names and sample values."""
     rows = read_csv_rows(path)
     return profile_rows(rows, sample_size)
 
 
 def profile_excel(path: Path, sample_size: int) -> dict:
+    """Profile workbook sheets when openpyxl is available."""
     try:
         import openpyxl
     except ImportError:
@@ -64,6 +69,7 @@ def profile_excel(path: Path, sample_size: int) -> dict:
 
 
 def profile_rows(rows: list[dict[str, str]], sample_size: int) -> dict:
+    """Summarize row counts, columns, and representative values."""
     if not rows:
         return {"profile_status": "profiled", "row_count": 0, "columns": []}
     columns = []
@@ -77,4 +83,3 @@ def profile_rows(rows: list[dict[str, str]], sample_size: int) -> dict:
                 break
         columns.append({"name": name, "non_null_count": len(values), "sample_values": sample_values})
     return {"profile_status": "profiled", "row_count": len(rows), "columns": columns}
-
