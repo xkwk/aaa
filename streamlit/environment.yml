@@ -1,7 +1,0 @@
-name: valuation_movement_dashboard
-channels:
-  - snowflake
-dependencies:
-  - streamlit
-  - snowflake-snowpark-python
-

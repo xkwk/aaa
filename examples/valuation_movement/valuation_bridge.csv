@@ -1,0 +1,7 @@
+from_period,to_period,product,portfolio,measure,driver,amount
+2025Q4,2026Q1,Whole Life,Retail,BEL,Expected unwind,40
+2025Q4,2026Q1,Whole Life,Retail,BEL,Assumption change,70
+2025Q4,2026Q1,Whole Life,Retail,BEL,Experience variance,20
+2025Q4,2026Q1,Term Life,Retail,BEL,Expected unwind,25
+2025Q4,2026Q1,Term Life,Retail,BEL,Experience variance,-45
+

@@ -1,10 +1,6 @@
 # Wiki Log
 
-## [initial] setup | Workspace scaffold
+## Initial Reset
 
-Initialized the valuation movement wiki seed files.
+Initialized the LLM-native actuarial agent wiki.
 
-
-## [2026-05-03 15:47:39Z] wiki | sample_2026q1
-
-Updated wiki from 3 source file(s).

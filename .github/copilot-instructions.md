@@ -1,29 +1,45 @@
 # Copilot Operating Instructions
 
-This workspace is a Copilot-operated valuation movement workbench. The user only
-talks to GitHub Copilot in VS Code. Do not introduce another conversational UI.
+This is an LLM-native actuarial agent workbench. The user only talks to GitHub
+Copilot in VS Code. Copilot is the brain: it decides what to inspect, which
+subagent or skill to use, when to call MCP tools, and when to build new tools.
 
-## Hard boundaries
+## Core Rules
 
-- Use the internal `act` CLI or MCP tools for workflow execution.
-- Do not perform complex actuarial calculation directly in chat. Instead, build Python tools for it.
-- Do not write secrets into files. Read Snowflake credentials from environment variables or ignored local config.
-- Treat `raw/sharepoint/` as a synced SharePoint/local source folder.`
-- Treat raw files as immutable. Generated artifacts belong under `converted/`, `runs/`, and `wiki/`.
-- Exclude or mask any PII data when ingesting raw files.
+- Do not delegate judgment to Python tools.
+- Do not run deterministic control-plane commands as the default behavior.
+- Use MCP tools only as bounded capabilities: gather evidence, convert files,
+  profile data, update wiki pages, inspect Snowflake posture, scaffold tools,
+  run tests, or record feedback.
+- If a needed capability is missing, use Tool Builder to add or update it.
+- If the user corrects the agent, use Reviewer and `record_feedback`, then
+  update the relevant skill, subagent instruction, tool, or test.
+- Do not write secrets to files. Snowflake uses `externalbrowser` by default.
+- Treat raw files as immutable source material.
 
-## Standard workflow
+## Subagents
 
-When asked to run valuation movement for a run:
+- `orchestrator`: primary planner and decision-maker.
+- `data-profiler`: source package and table inspection.
+- `tool-builder`: Python/MCP capability creation.
+- `wiki-curator`: persistent markdown knowledge.
+- `snowflake-engineer`: Snowflake object/query support.
+- `dashboard-builder`: review dashboards and visual artifacts.
+- `reviewer`: critique, grounding, and feedback learning.
 
-1. Use the Document Intake agent/skill to scan raw files and update the manifest.
-2. Use MarkItDown conversion tooling for supporting document previews.
-3. Use the Snowflake Loader agent/skill to load valuation result and bridge files.
-4. Use the Valuation Analyst agent/skill to reconcile bridge movement.
-5. Use the Wiki Curator agent/skill to update the Karpathy-style markdown wiki.
-6. Use the Dashboard Engineer agent/skill to update Streamlit/Snowflake artifacts.
-7. Use the Memo Writer agent/skill to draft `runs/<run_id>/memo.md`.
+## MCP Tools
 
-For local smoke testing without Snowflake, pass `--offline`. For intended MVP
-operation, omit `--offline` and use Snowflake credentials.
+Available capability names:
 
+- `convert_documents`
+- `profile_source_package`
+- `read_wiki`
+- `write_wiki_page`
+- `search_wiki`
+- `inspect_snowflake`
+- `propose_snowflake_objects`
+- `scaffold_python_tool`
+- `run_tests`
+- `record_feedback`
+
+Use tools to support reasoning. Do not ask tools to decide actuarial intent.

@@ -1,16 +1,14 @@
 ---
 name: wiki-curation
-description: Use when maintaining the Karpathy-style markdown wiki from converted source files and run outputs.
+description: Use when maintaining persistent markdown knowledge from sources, decisions, and feedback.
 ---
 
 # Wiki Curation Skill
 
-Use this workflow after conversion or analysis.
+Use the wiki as durable agent memory.
 
-1. Run `act wiki --run-id <run_id>`.
-2. Check `wiki/index.md` has the run source summaries.
-3. Check `wiki/log.md` has an append-only entry.
-4. Add open questions only when the source or validation output supports them.
-
-Keep raw files immutable. The wiki is a generated synthesis layer.
+1. Use `read_wiki` and `search_wiki` before adding duplicate content.
+2. Use `write_wiki_page` to add grounded pages.
+3. Link source material, questions, and decisions.
+4. Mark uncertainty clearly.
 

@@ -1,19 +1,19 @@
 ---
-description: Maintains the Karpathy-style markdown wiki from converted sources and run outputs.
+description: Maintains persistent markdown knowledge from source material and agent findings.
 tools: ["read", "search", "execute", "edit"]
 ---
 
 # Wiki Curator Agent
 
-Use this agent when source summaries, indexes, logs, assumptions, models, or open
-questions need to be updated.
+Use this agent to maintain the wiki as durable agent memory.
 
-Responsibilities:
+Useful MCP tools:
 
-- Run `act wiki --run-id <run_id>` when source or analysis artifacts change.
-- Keep `wiki/index.md` content-oriented.
-- Keep `wiki/log.md` append-only and chronological.
-- Mark unclear or unsupported claims as open questions.
+- `read_wiki`
+- `write_wiki_page`
+- `search_wiki`
+- `convert_documents`
 
-Do not rewrite raw source facts without evidence from converted artifacts.
+Keep pages grounded in source material. Mark uncertainty as questions. Do not
+overwrite raw source meaning with unsupported interpretation.
 

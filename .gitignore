@@ -12,13 +12,5 @@ dist/
 build/
 *.egg-info/
 
-# Generated runtime artifacts
-converted/*
-!converted/.gitkeep
-runs/*
-!runs/.gitkeep
-raw/sharepoint/*
-!raw/sharepoint/.gitkeep
-!raw/sharepoint/sample_2026q1/
-!raw/sharepoint/sample_2026q1/**
+converted/
 
